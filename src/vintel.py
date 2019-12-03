@@ -22,6 +22,7 @@ import sys
 import os
 import logging
 import traceback
+import signal
 
 from logging.handlers import RotatingFileHandler
 from logging import StreamHandler
@@ -132,9 +133,18 @@ class Application(QApplication):
         splash.finish(self.mainWindow)
 
 
+def sigint_handler(*args):
+    """Handler for the SIGINT signal."""
+    sys.stderr.write('\r')
+    # if QMessageBox.question(None, '', "Are you sure you want to quit?",
+    #                         QMessageBox.Yes | QMessageBox.No,
+    #                         QMessageBox.No) == QMessageBox.Yes:
+    QApplication.quit()
+
 # The main application
 if __name__ == "__main__":
-
+    signal.signal(signal.SIGINT, sigint_handler)
+    
     app = Application(sys.argv)
     sys.exit(app.exec_())
 
