@@ -33,30 +33,20 @@ ERROR = -1
 NOT_EXISTS = 0
 EXISTS = 1
 
-
 def charnameToId(name):
-    """ Uses the EVE API to convert a charname to his ID
+    """ Try to convert a charname to his ID
     """
     try:
-        url = "https://api.eveonline.com/eve/CharacterID.xml.aspx"
-        content = requests.get(url, params={'names': name}).text
-        soup = BeautifulSoup(content, 'html.parser')
-        rowSet = soup.select("rowset")[0]
-        for row in rowSet.select("row"):
-            if row["name"] == name:
-                return int(row["characterid"])
-
+        url = "https://zkillboard.com/autocomplete/{}/".format(name)
+        content = requests.get(url)
+        results = content.json()
+        # lets assume the first one is the hit \o/
+        if len(results) > 0:
+            char = results[0]
+            id = char['id']
+            return int(id)
     except Exception as e:
-        logging.error("Exception turning charname to id via API: %s", e)
-        # fallback! if there is a problem with the API, we use evegate
-        baseUrl = "https://gate.eveonline.com/Profile/"
-
-        content = requests.get("{}{}".format(baseUrl, requests.utils.quote(name))).text
-        soup = BeautifulSoup(content, 'html.parser')
-        img = soup.select("#imgActiveCharacter")
-        imageUrl = soup.select("#imgActiveCharacter")[0]["src"]
-        return imageUrl[imageUrl.rfind("/") + 1:imageUrl.rfind("_")]
-
+        return False
 
 def namesToIds(names):
     """ Uses the EVE API to convert a list of names to ids_to_names
