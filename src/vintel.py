@@ -101,7 +101,7 @@ class Application(QApplication):
         if backGroundColor:
             self.setStyleSheet("QWidget { background-color: %s; }" % backGroundColor)
 
-        splash.show()
+        # splash.show()
         self.processEvents()
 
         # Setup logging for console and rotated log files
