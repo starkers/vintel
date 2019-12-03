@@ -70,6 +70,8 @@ class Application(QApplication):
                                           "p_drive", "User", "My Documents", "EVE", "logs", "Chatlogs")
             elif sys.platform.startswith("linux"):
                 chatLogDirectory = os.path.join(os.path.expanduser("~"), "EVE", "logs", "Chatlogs")
+                if not os.path.exists(chatLogDirectory):
+                    chatLogDirectory = os.path.expanduser("~/.local/share/Steam/steamapps/compatdata/8500/pfx/drive_c/users/steamuser/My Documents/EVE/logs/Chatlogs/")
             elif sys.platform.startswith("win32") or sys.platform.startswith("cygwin"):
                 import ctypes.wintypes
                 buf = ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)
